@@ -1,0 +1,147 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.htv</groupId>
+  <artifactId>java-engineering-patterns</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>java-engineering-patterns</name>
+  <description>
+    Practical Java patterns from core GoF implementations
+    to integration and distributed-system building blocks.
+  </description>
+  <url>http://maven.apache.org</url>
+  <modules>
+    <module>pattern-core</module>
+    <module>creational-patterns</module>
+    <module>behavioral-patterns</module>
+    <module>structural-patterns</module>
+    <module>integration-patterns</module>
+    <module>resilience-patterns</module>
+    <module>distributed-patterns</module>
+    <module>workflow-patterns</module>
+    <module>case-studies</module>
+    <module>benchmarks</module>
+  </modules>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <junit.version>6.0.3</junit.version>
+    <assertj.version>3.27.6</assertj.version>
+    <mockito.version>5.20.0</mockito.version>
+    <maven.compiler.version>3.14.1</maven.compiler.version>
+    <maven.surefire.version>3.5.4</maven.surefire.version>
+    <maven.failsafe.version>3.5.4</maven.failsafe.version>
+    <maven.enforcer.version>3.6.2</maven.enforcer.version>
+    <jacoco.version>0.8.13</jacoco.version>
+</properties>
+
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.junit</groupId>
+      <artifactId>junit-bom</artifactId>
+      <version>${junit.version}</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${mockito.version}</version>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+
+<build>
+  <pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.version}</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven.surefire.version}</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${maven.failsafe.version}</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+      </plugin>
+    </plugins>
+  </pluginManagement>
+
+  <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-enforcer-plugin</artifactId>
+      <version>${maven.enforcer.version}</version>
+
+      <executions>
+        <execution>
+          <id>enforce-build-environment</id>
+          <goals>
+            <goal>enforce</goal>
+          </goals>
+
+          <configuration>
+            <rules>
+              <requireJavaVersion>
+                <version>[17, 21)</version>
+              </requireJavaVersion>
+
+              <requireMavenVersion>
+                <version>[3.9,)</version>
+              </requireMavenVersion>
+            </rules>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
+
+    <plugin>
+      <groupId>org.jacoco</groupId>
+      <artifactId>jacoco-maven-plugin</artifactId>
+      <version>${jacoco.version}</version>
+
+      <executions>
+        <execution>
+          <id>prepare-agent</id>
+          <goals>
+            <goal>prepare-agent</goal>
+          </goals>
+        </execution>
+
+        <execution>
+          <id>report</id>
+          <phase>verify</phase>
+          <goals>
+            <goal>report</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+  </plugins>
+</build>
+
+</project>
