@@ -1,0 +1,23 @@
+classDiagram
+    class NotificationSender {
+        <<interface>>
+        +supports() NotificationType
+        +send(NotificationRequest) NotificationResult
+    }
+
+    class EmailNotificationSender
+    class SmsNotificationSender
+    class PushNotificationSender
+
+    NotificationSender <|.. EmailNotificationSender
+    NotificationSender <|.. SmsNotificationSender
+    NotificationSender <|.. PushNotificationSender
+
+    class SimpleNotificationFactory {
+        +create(NotificationType) NotificationSender
+    }
+
+    SimpleNotificationFactory --> NotificationSender
+    SimpleNotificationFactory ..> EmailNotificationSender : creates
+    SimpleNotificationFactory ..> SmsNotificationSender : creates
+    SimpleNotificationFactory ..> PushNotificationSender : creates

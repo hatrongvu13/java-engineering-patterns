@@ -1,0 +1,12 @@
+sequenceDiagram
+    participant Client
+    participant Factory as SimpleNotificationFactory
+    participant Sender as EmailNotificationSender
+
+    Client->>Factory: create(EMAIL)
+    Factory->>Sender: new EmailNotificationSender()
+    Sender-->>Factory: sender
+    Factory-->>Client: sender
+
+    Client->>Sender: send(request)
+    Sender-->>Client: NotificationResult
