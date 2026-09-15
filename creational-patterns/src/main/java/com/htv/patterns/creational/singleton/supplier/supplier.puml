@@ -1,0 +1,46 @@
+sequenceDiagram
+    participant App
+    participant Container as SupplierBackedSingleton
+    participant Supplier
+    participant Service
+
+    App->>Container: configure(supplier)
+    Note over Container: instance remains null
+
+    App->>Container: getInstance()
+    Container->>Container: instance == null
+    Container->>Container: acquire monitor
+    Container->>Supplier: get()
+    Supplier->>Service: new Service()
+    Service-->>Supplier: service
+    Supplier-->>Container: service
+    Container->>Container: instance = service
+    Container->>Container: supplier = null
+    Container-->>App: service
+
+    App->>Container: getInstance()
+    Container-->>App: same service
+
+    classDiagram
+        class SupplierBackedSingleton~T~ {
+            -Object monitor
+            -Supplier~T~ supplier
+            -T instance
+            +configure(Supplier~T~) void
+            +isConfigured() boolean
+            +isInitialized() boolean
+            +getInstance() T
+            ~resetForTest() void
+        }
+
+        class Supplier~T~ {
+            <<interface>>
+            +get() T
+        }
+
+        class TestService {
+            +name() String
+        }
+
+        SupplierBackedSingleton o-- Supplier
+        SupplierBackedSingleton --> TestService
