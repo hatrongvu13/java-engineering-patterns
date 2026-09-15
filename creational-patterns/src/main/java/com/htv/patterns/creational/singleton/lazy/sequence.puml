@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant T1 as Thread 1
+    participant T2 as Thread 2
+    participant S as LazySingleton
+
+    T1->>S: getInstance()
+    T2->>S: getInstance()
+
+    T1->>S: instance == null
+    T2->>S: instance == null
+
+    T1->>S: new LazySingleton()
+    T2->>S: new LazySingleton()
+
+    S-->>T1: instance A
+    S-->>T2: instance B
