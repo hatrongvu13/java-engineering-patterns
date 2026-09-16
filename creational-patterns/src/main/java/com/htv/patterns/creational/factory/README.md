@@ -53,3 +53,61 @@ factories.
 - Abstract Factory
 - Registry-based Factory
 - Spring-managed Factory Registry
+```puml
+classDiagram
+    class NotificationSender {
+        <<interface>>
+        +supports() NotificationType
+        +send(NotificationRequest) NotificationResult
+    }
+
+    class EmailNotificationSender
+    class SmsNotificationSender
+    class PushNotificationSender
+
+    NotificationSender <|.. EmailNotificationSender
+    NotificationSender <|.. SmsNotificationSender
+    NotificationSender <|.. PushNotificationSender
+
+    class NotificationCreator {
+        <<abstract>>
+        #createSender() NotificationSender
+        +newSender() NotificationSender
+        +send(NotificationRequest) NotificationResult
+        #beforeSend(NotificationRequest) void
+        #afterSend(NotificationRequest, NotificationResult) void
+    }
+
+    class EmailNotificationCreator
+    class SmsNotificationCreator
+    class PushNotificationCreator
+
+    NotificationCreator <|-- EmailNotificationCreator
+    NotificationCreator <|-- SmsNotificationCreator
+    NotificationCreator <|-- PushNotificationCreator
+
+    EmailNotificationCreator ..> EmailNotificationSender : creates
+    SmsNotificationCreator ..> SmsNotificationSender : creates
+    PushNotificationCreator ..> PushNotificationSender : creates
+
+    NotificationCreator --> NotificationSender : uses
+```
+
+```puml
+sequenceDiagram
+    participant Client
+    participant Creator as EmailNotificationCreator
+    participant Sender as EmailNotificationSender
+
+    Client->>Creator: send(request)
+    Creator->>Creator: createSender()
+    Creator->>Sender: new EmailNotificationSender()
+    Sender-->>Creator: sender
+
+    Creator->>Creator: beforeSend(request)
+    Creator->>Sender: send(request)
+    Sender-->>Creator: result
+    Creator->>Creator: afterSend(request, result)
+
+    Creator-->>Client: result
+```
