@@ -36,6 +36,7 @@
     <maven.failsafe.version>3.5.4</maven.failsafe.version>
     <maven.enforcer.version>3.6.2</maven.enforcer.version>
     <jacoco.version>0.8.13</jacoco.version>
+    <apache-poi.version>5.5.1</apache-poi.version>
 </properties>
 
 <dependencyManagement>
@@ -58,6 +59,12 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
       <version>${mockito.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>${apache-poi.version}</version>
     </dependency>
   </dependencies>
 </dependencyManagement>
