@@ -1,7 +1,7 @@
 package com.htv.patterns.core.metadata;
 
 public enum PatternStatus {
-    PLANED,
+    PLANNED,
     IN_PROGRESS,
     COMPLETED,
     EXPERIMENTAL

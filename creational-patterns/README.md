@@ -6,7 +6,7 @@ Patterns that control object creation and lifecycle.
 
 ### Singleton
 
-Status: In progress
+Status: **Completed**
 
 Implemented:
 
@@ -14,9 +14,6 @@ Implemented:
 - Eager Singleton
 - Lazy Singleton
 - Synchronized Singleton
-
-Next:
-
 - Double-checked Locking Singleton
 - Holder Singleton
 - Enum Singleton
@@ -24,16 +21,30 @@ Next:
 
 Documentation:
 
-- src/main/java/io/github/hatrongvu/patterns/creational/singleton/README.md
+- `src/main/java/com/htv/patterns/creational/singleton/README.md`
 
 ### Factory
 
-Status: Planned
+Status: **Completed** — Simple Factory, Factory Method, Abstract
+Factory, and a registry-based factory.
+
+Documentation:
+
+- `src/main/java/com/htv/patterns/creational/factory/README.md`
 
 ### Builder
 
-Status: Planned
+Status: **Completed** — classic, fluent, step, and validated builders.
+
+Documentation:
+
+- `src/main/java/com/htv/patterns/creational/builder/README.md`
 
 ### Prototype
 
-Status: Planned
+Status: **Completed** — shallow, deep, copy-constructor, and a
+prototype registry.
+
+Documentation:
+
+- `src/main/java/com/htv/patterns/creational/prototype/README.md`
