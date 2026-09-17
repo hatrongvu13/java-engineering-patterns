@@ -4,6 +4,7 @@ Thư mục tài liệu cho `java-engineering-patterns`.
 
 ## Mục lục
 
+- [`pattern-catalog.md`](pattern-catalog.md) — **Mục lục liên kết tới README của mọi pattern.**
 - [`architecture.md`](architecture.md) — Kiến trúc hệ thống, module chính, luồng dữ liệu.
 - [`development.md`](development.md) — Thiết lập môi trường, cài dependency, lệnh build/test.
 - [`onboarding.md`](onboarding.md) — Hướng dẫn cho lập trình viên mới (quy ước, git, DoD).
