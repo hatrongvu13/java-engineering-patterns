@@ -15,4 +15,34 @@
 
 "Stub" = chỉ còn `App.java` Hello World + test JUnit 3, chưa triển khai.
 
+## Sơ đồ phụ thuộc module
+
+```puml
+component "pattern-core" as core
+
+component "creational-patterns" as creational
+component "behavioral-patterns" as behavioral
+component "structural-patterns" as structural
+component "resilience-patterns" as resilience
+component "integration-patterns" as integration
+component "distributed-patterns" as distributed
+component "workflow-patterns" as workflow
+component "case-studies" as cases
+component "benchmarks" as bench
+
+creational --> core
+behavioral --> core
+structural --> core
+resilience --> core
+integration --> core
+distributed --> core
+workflow --> core
+
+cases --> creational
+cases --> behavioral
+cases --> structural
+cases --> resilience
+bench --> core
+```
+
 Chi tiết luồng dữ liệu và tầng nền: xem `docs/architecture.md`.

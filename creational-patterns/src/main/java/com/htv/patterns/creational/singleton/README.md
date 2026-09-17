@@ -1,65 +1,56 @@
 # Java Singleton Catalog
 
-This catalog compares multiple Singleton implementations in Java,
-from minimal examples to thread-safe and configurable variants.
+So sánh nhiều cách hiện thực Singleton trong Java, từ ví dụ tối
+giản đến biến thể thread-safe và cấu hình được.
 
-## Learning objectives
+## Mục tiêu học
 
-- Understand the basic Singleton structure.
-- Compare eager and lazy initialization.
-- Reproduce the race condition in naive lazy initialization.
-- Understand synchronization costs.
-- Explore JVM-supported initialization mechanisms.
-- Evaluate serialization and reflection concerns.
-- Implement configurable deferred initialization.
+- Hiểu cấu trúc Singleton cơ bản.
+- So sánh khởi tạo eager và lazy.
+- Tái hiện race condition ở lazy init ngây thơ.
+- Hiểu chi phí đồng bộ hóa.
+- Khám phá cơ chế khởi tạo do JVM hỗ trợ (Holder, Enum).
+- Đánh giá vấn đề serialization và reflection.
+- Hiện thực khởi tạo trì hoãn cấu hình được (supplier-backed).
 
-## Implementations
+## Tổng quan các biến thể
 
-### Completed
-
-- Basic Singleton
-- Eager Singleton
-- Lazy Singleton
-- Synchronized Singleton
-
-### Next
-
-- Double-checked Locking Singleton
-- Initialization-on-demand Holder
-- Enum Singleton
-- Supplier-backed Singleton
-
-## Important note
-
-Some implementations in this catalog are intentionally incomplete
-or unsafe. They exist to demonstrate the problem solved by later
-implementations.
-
-Do not copy an implementation into production without reviewing:
-
-- Thread safety
-- Serialization
-- Reflection
-- Testability
-- Lifecycle requirements
-- Dependency injection alternatives
-
-```shell
-
-| Implementation | Lazy | Thread-safe | Synchronization per access | Serializable by default |
-|---|---:|---:|---:|---:|
-| Basic | No | Yes | No | No |
-| Eager | No | Yes | No | No |
-| Lazy | Yes | No | No | No |
-| Synchronized | Yes | Yes | Yes | No |
-| Double-checked | Yes | Yes | Initial creation path | No |
-| Holder | Yes | Yes | No | No |
-| Enum | No | Yes | No | Yes |
-| Supplier-backed | Yes | Depends on implementation | Depends | No |
-```
 ```puml
 classDiagram
-    class SupplierBackedSingleton~T~ {
+    class BasicSingleton
+    class EagerSingleton
+    class LazySingleton
+    class SynchronizedSingleton
+    class DoubleCheckedSingleton
+    class HolderSingleton
+    class EnumerationSingleton {
+        <<enumeration>>
+    }
+    class SupplierBackSingleton~T~
+
+    note for LazySingleton "Không thread-safe (minh họa race condition)"
+    note for HolderSingleton "Lazy + thread-safe, không đồng bộ khi đọc"
+    note for EnumerationSingleton "An toàn với serialization & reflection"
+```
+
+## Bảng so sánh
+
+| Implementation | Lazy | Thread-safe | Đồng bộ mỗi lần đọc | Serializable mặc định | Cấu hình runtime |
+|---|---:|---:|---:|---:|---:|
+| Basic | No | Yes | No | No | No |
+| Eager | No | Yes | No | No | No |
+| Lazy | Yes | **No** | No | No | No |
+| Synchronized | Yes | Yes | **Yes** | No | No |
+| Double-checked | Yes | Yes | Chỉ lần tạo đầu | No | No |
+| Holder | Yes | Yes | No | No | No |
+| Enum | No | Yes | No | **Yes** | No |
+| Supplier-backed | Yes | Yes | No | No | **Yes** |
+
+## Supplier-backed Singleton — cấu trúc & luồng
+
+```puml
+classDiagram
+    class SupplierBackSingleton~T~ {
         -Object monitor
         -Supplier~T~ supplier
         -T instance
@@ -67,7 +58,6 @@ classDiagram
         +isConfigured() boolean
         +isInitialized() boolean
         +getInstance() T
-        ~resetForTest() void
     }
 
     class Supplier~T~ {
@@ -75,99 +65,39 @@ classDiagram
         +get() T
     }
 
-    class TestService {
-        +name() String
-    }
-
-    SupplierBackedSingleton o-- Supplier
-    SupplierBackedSingleton --> TestService
+    SupplierBackSingleton o-- Supplier
 ```
 
 ```puml
 sequenceDiagram
     participant App
-    participant Container as SupplierBackedSingleton
+    participant Container as SupplierBackSingleton
     participant Supplier
     participant Service
 
     App->>Container: configure(supplier)
-    Note over Container: instance remains null
-
+    Note over Container: instance vẫn null (lazy)
     App->>Container: getInstance()
-    Container->>Container: instance == null
-    Container->>Container: acquire monitor
+    Container->>Container: instance == null → acquire monitor
     Container->>Supplier: get()
     Supplier->>Service: new Service()
-    Service-->>Supplier: service
-    Supplier-->>Container: service
-    Container->>Container: instance = service
-    Container->>Container: supplier = null
+    Service-->>Container: service
+    Container->>Container: instance = service; supplier = null
     Container-->>App: service
-
     App->>Container: getInstance()
-    Container-->>App: same service
+    Container-->>App: cùng một service
 ```
 
-```puml
-| Implementation | Lazy | Thread-safe | Synchronization after initialization | Runtime configuration | Serialization identity |
-|---|---:|---:|---:|---:|---:|
-| Basic | No | Yes | No | No | No |
-| Eager | No | Yes | No | No | No |
-| Lazy | Yes | No | No | No | No |
-| Synchronized | Yes | Yes | Every access | No | No |
-| Double-checked | Yes | Yes | No | No | No |
-| Holder | Yes | Yes | No | No | No |
-| Enum | No | Yes | No | No | Yes |
-| Supplier-backed | Yes | Yes | No | Yes | No |
-```
+## Lưu ý quan trọng
 
-## Implementations
+Một số hiện thực trong catalog cố ý **chưa an toàn** (ví dụ Lazy) để
+minh họa vấn đề mà biến thể sau giải quyết. Trước khi dùng cho
+production, hãy rà: thread safety, serialization, reflection,
+testability, vòng đời, và giải pháp Dependency Injection thay thế.
 
-### Completed
+## Khuyến nghị chọn biến thể
 
-- Basic Singleton
-- Eager Singleton
-- Lazy Singleton
-- Synchronized Singleton
-- Double-checked Locking Singleton
-- Initialization-on-demand Holder
-- Enum Singleton
-- Supplier-backed Singleton
-
-### Additional investigations
-
-- Reflection resistance
-- Serialization with readResolve
-- ClassLoader-scoped Singleton
-- Singleton lifecycle in Spring
-- Dependency injection as an alternative
-## Recommendations
-
-### Prefer Holder Singleton when
-
-- Initialization must be lazy.
-- No runtime arguments are required.
-- The lifecycle can follow the ClassLoader.
-- A compact implementation is preferred.
-
-### Prefer Enum Singleton when
-
-- Serialization identity matters.
-- One fixed instance is sufficient.
-- Inheritance is not required.
-- Runtime initialization arguments are unnecessary.
-
-### Prefer Supplier-backed Singleton when
-
-- The creation strategy is configured at runtime.
-- Initialization must be deferred.
-- The instance is expensive to create.
-- A custom construction hook is required.
-
-### Prefer Dependency Injection when
-
-- The application already uses Spring.
-- The object has dependencies.
-- Lifecycle management matters.
-- Test replacement is required.
-- Multiple configurations or scopes are needed.
+- **Holder** — cần lazy, không tham số runtime, vòng đời theo ClassLoader, code gọn.
+- **Enum** — cần định danh serialization, một thể hiện cố định, không kế thừa.
+- **Supplier-backed** — chiến lược tạo cấu hình lúc runtime, khởi tạo trì hoãn, đối tượng đắt.
+- **Dependency Injection** — app đã dùng Spring, đối tượng có phụ thuộc, cần quản lý vòng đời và thay thế khi test.

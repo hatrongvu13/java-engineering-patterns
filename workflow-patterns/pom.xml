@@ -6,39 +6,41 @@
         <artifactId>java-engineering-patterns</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>workflow-patterns</artifactId>
     <packaging>jar</packaging>
     <name>workflow-patterns</name>
     <description>Java 17 workflow pattern examples</description>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>17</maven.compiler.release>
-        <junit.version>5.11.4</junit.version>
     </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>com.htv</groupId>
+            <artifactId>pattern-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
                 <configuration>
-                    <release>${maven.compiler.release}</release>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.2</version>
-                <configuration>
-                    <useModulePath>false</useModulePath>
+                    <release>17</release>
                 </configuration>
             </plugin>
         </plugins>
